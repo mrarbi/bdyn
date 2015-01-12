@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<!-- utilisation de spring via struts -->
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<!-- constant to define global resource bundle -->
+	<constant name="struts.custom.i18n.resources" value="global" />
+	<constant name="struts.custom.properties" value="config" />
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.mapper.action.prefix.enabled" value="true" />
+	
+<!-- 	<constant name="struts.action.extension" value="action"/> -->
+
+	<constant name="struts.convention.default.parent.package" value="default" />
+	<constant name="struts.convention.action.suffix" value="Controller" />
+	<constant name="struts.convention.action.mapAllMatches" value="true" />
+
+	<!-- <constant name="struts.ui.theme" value="custom" /> -->
+	<!-- <constant name="struts.ui.templateDir" value="template" /> -->
+	
+	<constant name="struts.multipart.maxSize" value="30000000" />
+	
+	<constant name="struts.action.excludePattern" value="/j_spring_security_check" />
+
+	<package name="default" extends="struts-default">
+		<result-types>
+			<result-type name="tiles"
+				class="org.apache.struts2.views.tiles.TilesResult" />
+		</result-types>
+
+		<global-results>
+			<result name="custom_error" type="tiles">error.tiles</result>
+		</global-results>
+
+		<global-exception-mappings>
+			<exception-mapping result="custom_error"
+				exception="java.lang.ClassNotFoundException"></exception-mapping>
+			<exception-mapping result="custom_error"
+				exception="java.lang.NullPointerException"></exception-mapping>
+			<exception-mapping result="custom_error" 
+				exception="java.lang.Exception"></exception-mapping>
+		</global-exception-mappings>
+
+		<action name="">
+			<result type="tiles">error.tiles</result>
+		</action>
+		<!-- <action name="accueil"> -->
+		<!-- <result type="tiles">accueil.tiles</result> -->
+		<!-- </action> -->
+		<action name="login">
+			<result type="tiles">login.tiles</result>
+		</action>
+		<action name="loginfailed">
+			<result type="tiles">loginfailed.tiles</result>
+		</action>
+		<!-- <action name="etape1"> -->
+		<!-- <result type="tiles">etape1.tiles</result> -->
+		<!-- </action> -->
+		<!-- <action name="etape2"> -->
+		<!-- <result type="tiles">etape2.tiles</result> -->
+		<!-- </action> -->
+	</package>
+	
+</struts>

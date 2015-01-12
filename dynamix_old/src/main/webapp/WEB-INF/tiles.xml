@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+<!-- 	<definition name="imports.tiles" template="/tiles/imports.jsp"> -->
+<!-- 	    <put-attribute name="imports" value="/tiles/imports.jsp"/> -->
+<!-- 	</definition> -->
+	
+	<definition name="baseLayout.tiles" template="/tiles/baseLayout.jsp">
+	    <put-attribute name="title" value="DynamiX"/>
+	    <put-attribute name="imports" value="/tiles/imports.jsp"/>
+	    <put-attribute name="header" value="/tiles/header.jsp"/>
+<!-- 	    <put-attribute name="leftMenu" value="/tiles/leftmenu.jsp"/> -->
+<!-- 	    <put-attribute name="rightMenu" value="/tiles/rightmenu.jsp"/> -->
+	    <put-attribute name="body" value="/tiles/body.jsp"/>
+<!-- 	    <put-attribute name="footer" value="/tiles/footer.jsp"/> -->
+	</definition>
+  
+	<definition name="login.tiles" template="/pages/login.jsp"/>
+	<definition name="loginfailed.tiles" template="/pages/login.jsp?error=true"/>
+  
+	<definition name="error.tiles" extends="baseLayout.tiles">
+		<put-attribute name="body" value="/tiles/error.jsp" />
+	</definition>
+  
+	<definition name="accueil.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/accueil.jsp"/>      
+	</definition>
+	
+	<definition name="gestTempl.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/admin/gestTempl.jsp"/>      
+	</definition>
+	
+	<definition name="gestUser.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/admin/gestUser.jsp"/>      
+	</definition>
+	
+	<definition name="etape1.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/etape1.jsp"/>      
+	</definition>
+	
+	<definition name="etape2.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/etape2.jsp"/>      
+	</definition>
+	
+	<definition name="etape3.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/etape3.jsp"/>      
+	</definition>
+	
+	<definition name="etape4.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/etape4.jsp"/>      
+	</definition>
+	
+	<definition name="etape5.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/etape5.jsp"/>      
+	</definition>
+	
+	<definition name="matching.tiles" extends="baseLayout.tiles">
+	    <put-attribute name="body" value="/pages/matching.jsp"/>      
+	</definition>
+	
+	
+</tiles-definitions>

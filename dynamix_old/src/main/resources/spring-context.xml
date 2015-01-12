@@ -1,0 +1,108 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:p="http://www.springframework.org/schema/p"
+xmlns:tx="http://www.springframework.org/schema/tx"
+xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+xmlns:task="http://www.springframework.org/schema/task"
+xmlns:util="http://www.springframework.org/schema/util"
+xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.orbit.dynamix.dao" />
+	<context:component-scan base-package="com.orbit.dynamix.service" />
+	<context:component-scan base-package="com.orbit.dynamix.security" />
+
+	<task:annotation-driven />
+	
+	 <!-- Create DataSource Bean -->
+      
+<!--     <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean"> -->
+<!--         <property name="jndiName" value="java:comp/env/jdbc/MyProdDB"/> -->
+<!--         <property name="resourceRef" value="true" /> -->
+<!--     </bean> -->
+    
+	<!-- Data Source Declaration -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close" primary="true">
+		<property name="driverClass" value="#{configuration['jdbc.driver']}" />
+		<property name="jdbcUrl" value="#{configuration['jdbc.url']}" />
+		<property name="user" value="#{configuration['jdbc.username']}" />
+		<property name="password" value="#{configuration['jdbc.password']}" />
+		<property name="maxPoolSize" value="#{configuration['jdbc.maxPoolSize']}" />
+		<property name="maxStatements" value="#{configuration['jdbc.maxStatements']}" />
+		<property name="minPoolSize" value="#{configuration['jdbc.minPoolSize']}" />
+	</bean>
+	
+	<!-- Session Factory Declaration -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">#{configuration['hibernate.dialect']}</prop>
+				<prop key="hibernate.show_sql">#{configuration['hibernate.show_sql']}</prop>
+				<prop key="hibernate.hbm2ddl.auto">#{configuration['hibernate.hbm2ddl.auto']}</prop>
+				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+				<prop key="hibernate.connection.characterEncoding">utf-8</prop>
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.orbit.dynamix.entity</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate"></bean>
+
+	<!-- Transaction Manager is defined -->
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- Enable the configuration of transactional behavior based on annotations -->
+	<tx:annotation-driven transaction-manager="txManager" />
+	
+	<bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
+		<property name="host" value="#{configuration['mongo.host']}"></property>
+		<property name="port" value="#{configuration['mongo.port']}"></property>
+	</bean>
+
+	<!-- MongoTemplate for connecting and quering the documents in the database -->
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongo" ref="mongo" />
+		<constructor-arg name="databaseName" value="dynamixDb" />
+	</bean>
+
+<!-- 	<mongo:repositories base-package="com.vitalflux.mongo.repositories" /> -->
+	
+	<beans profile="dev">
+<!-- 		<bean id="configuration" -->
+<!-- 			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+<!-- 			<property name="location"> -->
+<!-- 				<value>classpath:config.properties</value> -->
+<!-- 			</property> -->
+<!-- 		</bean> -->
+		
+		<util:properties id="configuration" location="classpath:config.properties"/>
+	</beans>
+
+	<beans profile="test,prod">
+<!-- 		<bean id="configuration" -->
+<!-- 			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+<!-- 			<property name="location"> -->
+<!-- 				<value>classpath:configProd.properties</value> -->
+<!-- 			</property> -->
+<!-- 		</bean> -->
+		<util:properties id="configuration" location="classpath:configProd.properties"/>
+	</beans>
+	
+</beans>

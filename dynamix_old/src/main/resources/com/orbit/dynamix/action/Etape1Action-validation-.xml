@@ -1,0 +1,17 @@
+<!DOCTYPE validators PUBLIC
+         "-//Apache Struts//XWork Validator 1.0.3//EN"
+           "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	
+<!-- 	<validator type="requiredstring" short-circuit="true"> -->
+<!-- 		<param name="fieldname">creative.url</param> -->
+<!-- 		<message>l'url est obligatoire</message> -->
+<!-- 	</validator> -->
+	<field name="creative.url">
+        <field-validator type="regex">
+            <param name="regex"><![CDATA[((http://|https://|ftp://)([\S.]+))|((\\\\)(.+)(\.)(\w+))]]></param>
+            <message>Url non valide!</message>
+        </field-validator>
+    </field>
+	
+</validators>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<http pattern="/themes/**" security="none"/>
+	<http pattern="/bans/**" security="none"/>
+	<http pattern="/rest/**" security="none"/>
+	<http pattern="/css/**" security="none"/>
+	<http pattern="/images/**" security="none"/>
+	<http auto-config="true" use-expressions="true" access-denied-page="/pages/denied.jsp">
+		<intercept-url pattern="/index*" access="permitAll" />
+		<intercept-url pattern="/login*" access="permitAll" />
+		<intercept-url pattern="/admin/*" access="hasAnyRole('Administrateur','Annonceur')" />
+		<intercept-url pattern="/*" access="isAuthenticated()" />
+		<intercept-url pattern="/**" access="isAuthenticated()" />
+
+		<logout logout-success-url="/login.action" logout-url="/logout.action" />
+		<form-login login-page="/login.action" 
+			default-target-url="/accueil.action"
+			authentication-failure-url="/loginfailed.action" />
+		<logout delete-cookies="JSESSIONID" />
+		<remember-me key="uniqueAndSecret"/>
+	</http>
+
+	<beans:bean id="authenticationFilter"
+		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<beans:property name="filterProcessesUrl" value="/j_spring_security_check" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="authenticationSuccessHandler">
+			<beans:bean
+				class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+				<beans:property name="useReferer" value="true" />
+			</beans:bean>
+		</beans:property>
+		<beans:property name="authenticationFailureHandler">
+			<beans:bean
+				class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+				<beans:property name="defaultFailureUrl" value="/loginfailed" />
+			</beans:bean>
+		</beans:property>
+	</beans:bean>
+	
+	<beans:bean id='bCryptPasswordEncoder' class='org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder'/>
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider user-service-ref="utilisateurService">
+			<password-encoder ref="bCryptPasswordEncoder" />
+<!-- 			<password-encoder hash="md5" /> -->
+		</authentication-provider>
+		<!-- <authentication-provider> -->
+		<!-- <password-encoder hash="md5" /> -->
+		<!-- <jdbc-user-service data-source-ref="dataSource" -->
+		<!-- users-by-username-query="select username, password, active from ox_users 
+			where username=?" -->
+		<!-- authorities-by-username-query="select u.username, ur.account_type 
+			from ox_users u, ox_accounts ur where u.default_account_id = ur.account_id 
+			and u.username =? " /> -->
+		<!-- </authentication-provider> -->
+	</authentication-manager>
+
+</beans:beans>
